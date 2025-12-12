@@ -151,3 +151,60 @@ function guardarTabla() {
 
   alert("✅ Semana guardada correctamente para " + sucursal.toUpperCase());
 }
+
+/****************************************************
+ * ☁️ GUARDAR EN FIREBASE
+ ****************************************************/
+import { db, collection, addDoc } from "./firebase-config.js";
+
+async function guardarEnFirebase(registro) {
+  try {
+    await addDoc(collection(db, "cierres"), registro);
+    alert("✅ Semana guardada en la nube correctamente.");
+  } catch (e) {
+    console.error("❌ Error al guardar en Firebase:", e);
+    alert("Error al guardar en la nube. Ver consola.");
+  }
+}
+
+/****************************************************
+ * 💾 MODIFICAR GUARDAR TABLA
+ ****************************************************/
+async function guardarTabla() {
+  const sucursal = localStorage.getItem("sucursalActual");
+  const semana = document.getElementById("semanaInput").value.trim();
+  const resumen = document.getElementById("resumenInput").value.trim();
+
+  if (!sucursal) return alert("Seleccioná una sucursal antes de guardar.");
+  if (!semana) return alert("Ingresá la semana.");
+  if (!resumen) return alert("Ingresá el resumen.");
+
+  const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
+  const datos = filas.map(fila => ({
+    dia: fila.children[0].innerText,
+    clover: parseFloat(fila.children[1].dataset.valor || 0),
+    posnet: parseFloat(fila.children[2].dataset.valor || 0),
+    total: parseFloat(fila.children[3].innerText.replace(/[^\d.-]/g, "") || 0)
+  }));
+
+  const registro = {
+    sucursal,
+    semana,
+    resumen,
+    datos,
+    totales: {
+      clover: parseFloat(document.getElementById("totalClover").innerText.replace(/[^\d.-]/g, "")) || 0,
+      posnet: parseFloat(document.getElementById("totalPosnet").innerText.replace(/[^\d.-]/g, "")) || 0,
+      general: parseFloat(document.getElementById("totalGeneral").innerText.replace(/[^\d.-]/g, "")) || 0,
+    },
+    fechaGuardado: new Date().toLocaleString("es-AR")
+  };
+
+  // Guardar localmente
+  const registros = JSON.parse(localStorage.getItem("cierresRiadigos") || "[]");
+  registros.push(registro);
+  localStorage.setItem("cierresRiadigos", JSON.stringify(registros));
+
+  // Guardar también en la nube
+  await guardarEnFirebase(registro);
+}
