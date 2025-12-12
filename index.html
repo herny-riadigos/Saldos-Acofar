@@ -1,210 +1,98 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Saldos Acofar - Riadigos</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saldos Acofar - Riadigos</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <!-- ======== CABECERA ======== -->
-    <header>
-        <div class="fecha" id="fecha"></div>
-        <button class="btn-riadigos" onclick="irPrincipal()">Riadigos*</button>
-    </header>
+  <!-- ======== CABECERA ======== -->
+  <header>
+    <div class="fecha" id="fecha"></div>
+    <button class="btn-riadigos" onclick="irPrincipal()">Riadigos*</button>
+  </header>
 
-    <!-- ======== CONTENIDO PRINCIPAL ======== -->
-    <main>
-        <!-- BARRA LATERAL -->
-        <div class="sidebar">
-            <button onclick="abrirFarmacia('JBJ')">JBJ</button>
-            <button onclick="abrirFarmacia('ALEM')">ALEM</button>
-            <button onclick="abrirFarmacia('FARMACIA MESA')">FARMACIA MESA</button>
-            <button onclick="abrirFarmacia('GASCON')">GASCON</button>
-            <button onclick="abrirFarmacia('DIAGONAL')">DIAGONAL</button>
-            <button onclick="abrirFarmacia('MRL')">MRL</button>
-            <button onclick="abrirFarmacia('GRAMA')">GRAMA</button>
-            <button onclick="abrirFarmacia('ORTEGA')">ORTEGA</button>
-            <button onclick="abrirFarmacia('RIMATU')">RIMATU</button>
-            <button onclick="abrirFarmacia('RM')">RM</button>
-            <button onclick="abrirFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</button>
-            <button onclick="abrirFarmacia('SAN MARTIN')">SAN MARTIN</button>
+  <!-- ======== BOTÓN BUSCAR ======== -->
+  <div class="buscar-container">
+    <button class="btn-buscar" onclick="irBuscar()">🔍 Buscar</button>
+  </div>
+
+  <!-- ======== CONTENIDO CENTRAL ======== -->
+  <main>
+    <div class="contenido">
+      <h2 class="titulo-principal">Cierre semanal de Acofar</h2>
+
+      <!-- 🔽 Selector de sucursal -->
+      <div class="selector-farmacia">
+        <button class="btn-seleccionar" onclick="toggleSelector()">Seleccionar Sucursal</button>
+        <div id="listaFarmacias" class="lista-farmacias">
+          <ul>
+            <li onclick="seleccionarFarmacia('JBJ')">JBJ</li>
+            <li onclick="seleccionarFarmacia('ALEM')">ALEM</li>
+            <li onclick="seleccionarFarmacia('FARMACIA MESA')">FARMACIA MESA</li>
+            <li onclick="seleccionarFarmacia('GASCON')">GASCON</li>
+            <li onclick="seleccionarFarmacia('DIAGONAL')">DIAGONAL</li>
+            <li onclick="seleccionarFarmacia('MRL')">MRL</li>
+            <li onclick="seleccionarFarmacia('GRAMA')">GRAMA</li>
+            <li onclick="seleccionarFarmacia('ORTEGA')">ORTEGA</li>
+            <li onclick="seleccionarFarmacia('RIMATU')">RIMATU</li>
+            <li onclick="seleccionarFarmacia('RM')">RM</li>
+            <li onclick="seleccionarFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</li>
+            <li onclick="seleccionarFarmacia('SAN MARTIN')">SAN MARTIN</li>
+          </ul>
         </div>
 
-        <!-- CONTENIDO CENTRAL -->
-        <div class="contenido">
-            <h2 class="titulo-principal">Cierre semanal de tarjetas</h2>
+        <p id="farmaciaSeleccionada" class="farmacia-seleccionada">Sucursal no seleccionada</p>
+      </div>
 
-            <!-- 🔽 Selector de farmacia -->
-            <div class="selector-farmacia">
-                <button class="btn-seleccionar" onclick="toggleSelector()">Seleccionar Farmacia</button>
-                <div id="listaFarmacias" class="lista-farmacias">
-                    <ul>
-                        <li onclick="seleccionarFarmacia('JBJ')">JBJ</li>
-                        <li onclick="seleccionarFarmacia('ALEM')">ALEM</li>
-                        <li onclick="seleccionarFarmacia('FARMACIA MESA')">FARMACIA MESA</li>
-                        <li onclick="seleccionarFarmacia('GASCON')">GASCON</li>
-                        <li onclick="seleccionarFarmacia('DIAGONAL')">DIAGONAL</li>
-                        <li onclick="seleccionarFarmacia('MRL')">MRL</li>
-                        <li onclick="seleccionarFarmacia('GRAMA')">GRAMA</li>
-                        <li onclick="seleccionarFarmacia('ORTEGA')">ORTEGA</li>
-                        <li onclick="seleccionarFarmacia('RIMATU')">RIMATU</li>
-                        <li onclick="seleccionarFarmacia('RM')">RM</li>
-                        <li onclick="seleccionarFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</li>
-                        <li onclick="seleccionarFarmacia('SAN MARTIN')">SAN MARTIN</li>
-                    </ul>
-                </div>
+      <!-- 🗓️ Datos de Semana -->
+      <div class="datos-semana">
+        <label>Semana:
+          <input type="text" id="semanaInput" placeholder="Ej: 08/12/2025" />
+        </label>
+        <label>Resumen:
+          <input type="text" id="resumenInput" placeholder="Ej: 2520" />
+        </label>
+      </div>
 
-                <p id="farmaciaSeleccionada" class="farmacia-seleccionada">Ninguna farmacia seleccionada</p>
-            </div>
+      <!-- 🧾 Tabla de carga -->
+      <div class="tabla-semanal">
+        <table id="tablaSemanal">
+          <thead>
+            <tr>
+              <th>Día</th>
+              <th>Clover</th>
+              <th>Posnet</th>
+              <th>Total Día</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Lunes</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Martes</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Miércoles</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Jueves</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Viernes</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Sábado</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr><td>Domingo</td><td contenteditable="true"></td><td contenteditable="true"></td><td>$0,00</td></tr>
+            <tr class="fila-total">
+              <td><strong>Total Semana</strong></td>
+              <td id="totalClover">$0,00</td>
+              <td id="totalPosnet">$0,00</td>
+              <td id="totalGeneral">$0,00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-            <!-- 🧾 Tabla de carga -->
-            <div class="tabla-semanal">
-                <table id="tablaSemanal">
-                    <thead>
-                        <tr>
-                            <th>Día</th>
-                            <th>Clover</th>
-                            <th>Posnet</th>
-                            <th>Total Día</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Lunes</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Martes</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Miércoles</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Jueves</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Viernes</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Sábado</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr>
-                            <td>Domingo</td>
-                            <td contenteditable="true"></td>
-                            <td contenteditable="true"></td>
-                            <td>$0,00</td>
-                        </tr>
-                        <tr class="fila-total">
-                            <td><strong>Total Semana</strong></td>
-                            <td id="totalClover">$0,00</td>
-                            <td id="totalPosnet">$0,00</td>
-                            <td id="totalGeneral">$0,00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+      <!-- 💾 Botón Guardar -->
+      <div class="guardar-container">
+        <button class="btn-guardar" onclick="guardarTabla()">💾 Guardar Semana</button>
+      </div>
+    </div>
+  </main>
 
-        <script>
-            // --- Selector de farmacia ---
-            function toggleSelector() {
-                const lista = document.getElementById("listaFarmacias");
-                lista.style.display = lista.style.display === "block" ? "none" : "block";
-            }
-
-            function seleccionarFarmacia(nombre) {
-                document.getElementById("farmaciaSeleccionada").textContent =
-                    "Sucursal seleccionada: " + nombre;
-                document.getElementById("listaFarmacias").style.display = "none";
-            }
-
-            // --- Formato moneda y cálculos ---
-            const tabla = document.getElementById("tablaSemanal");
-
-            tabla.addEventListener("input", (e) => {
-                if (e.target.hasAttribute("contenteditable")) {
-                    const valor = e.target.innerText.replace(/[^\d,.-]/g, "").replace(",", ".");
-                    e.target.dataset.valor = parseFloat(valor) || 0;
-                    actualizarTotales();
-                }
-            });
-
-            tabla.addEventListener("blur", (e) => {
-                if (e.target.hasAttribute("contenteditable")) {
-                    const valor = parseFloat(e.target.dataset.valor || 0);
-                    e.target.innerText = valor.toLocaleString("es-AR", {
-                        style: "currency",
-                        currency: "ARS"
-                    });
-                }
-            }, true);
-
-            // --- Salto al presionar Enter ---
-            tabla.addEventListener("keydown", (e) => {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    const celdas = [...tabla.querySelectorAll("[contenteditable]")];
-                    const idx = celdas.indexOf(e.target);
-                    if (idx >= 0 && idx < celdas.length - 1) {
-                        celdas[idx + 1].focus();
-                    }
-                }
-            });
-
-            function actualizarTotales() {
-                const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
-                let totalClover = 0, totalPosnet = 0, totalGeneral = 0;
-
-                filas.forEach(fila => {
-                    const c1 = parseFloat(fila.children[1].dataset.valor || 0);
-                    const c2 = parseFloat(fila.children[2].dataset.valor || 0);
-                    const suma = c1 + c2;
-                    fila.children[3].innerText = suma.toLocaleString("es-AR", {
-                        style: "currency",
-                        currency: "ARS"
-                    });
-                    totalClover += c1;
-                    totalPosnet += c2;
-                    totalGeneral += suma;
-                });
-
-                document.getElementById("totalClover").innerText =
-                    totalClover.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
-                document.getElementById("totalPosnet").innerText =
-                    totalPosnet.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
-                document.getElementById("totalGeneral").innerText =
-                    totalGeneral.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
-            }
-        </script>
-        <script>
-            // Mostrar fecha actual en formato largo
-            const fechaElem = document.getElementById("fecha");
-            const hoy = new Date();
-            const opciones = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-            fechaElem.textContent = hoy.toLocaleDateString("es-AR", opciones);
-        </script>
-
-
+  <script src="utilidades.js"></script>
 </body>
-
 </html>

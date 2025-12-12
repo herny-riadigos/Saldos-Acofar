@@ -301,3 +301,299 @@ th {
     background: var(--verde-claro);
     font-weight: bold;
 }
+
+/* ===========================
+   ✏️ DATOS DE SEMANA
+   =========================== */
+.datos-semana {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.datos-semana label {
+  font-weight: 600;
+  color: var(--texto-oscuro);
+}
+
+.datos-semana input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--verde-riadigos);
+  outline: none;
+  font-size: 15px;
+}
+
+.datos-semana input:focus {
+  border-color: var(--verde-oscuro);
+}
+
+/* ===========================
+   💾 BOTÓN GUARDAR
+   =========================== */
+.guardar-container {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.btn-guardar {
+  background: var(--verde-riadigos);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(17, 197, 174, 0.25);
+  transition: 0.25s ease;
+}
+
+.btn-guardar:hover {
+  background: var(--verde-oscuro);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   🎨 BOTÓN BUSCAR (reemplaza la barra lateral)
+   =========================== */
+.buscar-container {
+  position: fixed;
+  top: 80px;
+  left: 30px;
+  z-index: 9;
+}
+
+.btn-buscar {
+  background: var(--verde-riadigos);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(17, 197, 174, 0.3);
+  transition: 0.25s ease;
+}
+
+.btn-buscar:hover {
+  background: var(--verde-oscuro);
+  transform: translateY(-2px);
+}
+
+/* ===========================
+   ✏️ DATOS DE SEMANA (semana / resumen)
+   =========================== */
+.datos-semana {
+  display: flex;
+  gap: 20px;
+  margin: 20px 0 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.datos-semana label {
+  font-weight: 600;
+  color: var(--texto-oscuro);
+}
+
+.datos-semana input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--verde-riadigos);
+  outline: none;
+  font-size: 15px;
+}
+
+.datos-semana input:focus {
+  border-color: var(--verde-oscuro);
+}
+
+/* ===========================
+   💾 BOTÓN GUARDAR
+   =========================== */
+.guardar-container {
+  text-align: center;
+  margin-top: 25px;
+}
+
+.btn-guardar {
+  background: var(--verde-riadigos);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 28px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(17, 197, 174, 0.25);
+  transition: 0.25s ease;
+}
+
+.btn-guardar:hover {
+  background: var(--verde-oscuro);
+  transform: translateY(-2px);
+}
+/* ===========================
+   🏪 SELECTOR DE SUCURSAL
+   =========================== */
+.selector-farmacia {
+  position: relative;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.btn-seleccionar {
+  background: var(--verde-riadigos);
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  box-shadow: 0 3px 12px rgba(17, 197, 174, 0.25);
+}
+
+.btn-seleccionar:hover {
+  background: var(--verde-oscuro);
+  transform: translateY(-2px);
+}
+
+.lista-farmacias {
+  display: none;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 240px;
+  margin: 10px auto 0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+}
+
+.lista-farmacias ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lista-farmacias li {
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.lista-farmacias li:hover {
+  background: var(--verde-claro);
+  color: var(--texto-oscuro);
+}
+
+.farmacia-seleccionada {
+  margin-top: 15px;
+  font-weight: 600;
+  color: var(--verde-oscuro);
+}
+
+/* ===========================
+   🔍 FILTROS Y RESULTADOS
+   =========================== */
+.filtros {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin: 25px 0 35px;
+}
+
+.filtros label {
+  font-weight: 600;
+  color: var(--texto-oscuro);
+}
+
+.filtros input,
+.filtros select {
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 2px solid var(--verde-riadigos);
+  font-size: 15px;
+  outline: none;
+}
+
+.filtros input:focus,
+.filtros select:focus {
+  border-color: var(--verde-oscuro);
+}
+
+/* ===========================
+   📋 RESULTADOS
+   =========================== */
+.resultados {
+  width: 90%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.placeholder {
+  text-align: center;
+  color: #777;
+  font-size: 16px;
+}
+
+.card-resultado {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  transition: 0.25s ease;
+}
+
+.cabecera-card {
+  padding: 12px 20px;
+  background: var(--verde-claro);
+  color: var(--texto-oscuro);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cabecera-card:hover {
+  background: var(--verde-riadigos);
+  color: white;
+}
+
+.detalle-card {
+  display: none;
+  padding: 15px;
+}
+
+.detalle-card table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.detalle-card th, .detalle-card td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.detalle-card th {
+  background: var(--verde-riadigos);
+  color: white;
+}
+
+.fecha-guardado {
+  font-size: 13px;
+  color: #555;
+  font-weight: normal;
+}

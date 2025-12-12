@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscar Semanas - Riadigos</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- ======== CABECERA ======== -->
+  <header>
+    <div class="fecha" id="fecha"></div>
+    <button class="btn-riadigos" onclick="irPrincipal()">Riadigos*</button>
+  </header>
+
+  <!-- ======== BOTÓN VOLVER ======== -->
+  <div class="buscar-container">
+    <button class="btn-buscar" onclick="irPrincipal()">⬅ Volver</button>
+  </div>
+
+  <!-- ======== CONTENIDO CENTRAL ======== -->
+  <main>
+    <div class="contenido">
+      <h2 class="titulo-principal">Buscar registros de cierres semanales</h2>
+
+      <!-- 🧭 FILTROS -->
+      <div class="filtros">
+        <label>Sucursal:
+          <select id="filtroSucursal">
+            <option value="">Todas</option>
+            <option>JBJ</option>
+            <option>ALEM</option>
+            <option>FARMACIA MESA</option>
+            <option>GASCON</option>
+            <option>DIAGONAL</option>
+            <option>MRL</option>
+            <option>GRAMA</option>
+            <option>ORTEGA</option>
+            <option>RIMATU</option>
+            <option>RM</option>
+            <option>GUEMES Y SHOPPING</option>
+            <option>SAN MARTIN</option>
+          </select>
+        </label>
+
+        <label>Semana:
+          <input type="text" id="filtroSemana" placeholder="Ej: 08/12/2025">
+        </label>
+
+        <label>Resumen:
+          <input type="text" id="filtroResumen" placeholder="Ej: 2520">
+        </label>
+
+        <button class="btn-buscar" onclick="filtrarRegistros()">🔍 Buscar</button>
+      </div>
+
+      <!-- 🧾 RESULTADOS -->
+      <div id="resultados" class="resultados">
+        <p class="placeholder">🔎 No hay resultados para mostrar.</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="utilidades.js"></script>
+  <script>
+    /****************************************************
+     * 📅 Mostrar fecha actual
+     ****************************************************/
+    const fechaElem = document.getElementById("fecha");
+    const hoy = new Date();
+    const opciones = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+    fechaElem.textContent = hoy.toLocaleDateString("es-AR", opciones);
+
+    /****************************************************
+     * 📂 Cargar y mostrar registros guardados
+     ****************************************************/
+    const resultados = document.getElementById("resultados");
+
+    function filtrarRegistros() {
+      const registros = JSON.parse(localStorage.getItem("cierresRiadigos") || "[]");
+      const suc = document.getElementById("filtroSucursal").value.trim();
+      const sem = document.getElementById("filtroSemana").value.trim();
+      const res = document.getElementById("filtroResumen").value.trim();
+
+      const filtrados = registros.filter(r =>
+        (!suc || r.sucursal === suc) &&
+        (!sem || r.semana.includes(sem)) &&
+        (!res || r.resumen.includes(res))
+      );
+
+      mostrarResultados(filtrados);
+    }
+
+    function mostrarResultados(lista) {
+      resultados.innerHTML = "";
+
+      if (lista.length === 0) {
+        resultados.innerHTML = `<p class="placeholder">❌ No se encontraron registros.</p>`;
+        return;
+      }
+
+      lista.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.className = "card-resultado";
+        div.innerHTML = `
+          <div class="cabecera-card" onclick="toggleDetalle(${i})">
+            <strong>${r.sucursal}</strong> — Semana: ${r.semana} — Resumen: ${r.resumen}
+            <span class="fecha-guardado">(${r.fechaGuardado})</span>
+          </div>
+          <div class="detalle-card" id="detalle_${i}">
+            <table>
+              <thead><tr><th>Día</th><th>Clover</th><th>Posnet</th><th>Total</th></tr></thead>
+              <tbody>
+                ${r.datos.map(f => `
+                  <tr>
+                    <td>${f.dia}</td>
+                    <td>${f.clover.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                    <td>${f.posnet.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                    <td>${f.total.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                  </tr>
+                `).join("")}
+                <tr class="fila-total">
+                  <td><strong>Total</strong></td>
+                  <td>${r.totales.clover.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                  <td>${r.totales.posnet.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                  <td>${r.totales.general.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+        resultados.appendChild(div);
+      });
+    }
+
+    function toggleDetalle(i) {
+      const el = document.getElementById("detalle_" + i);
+      el.style.display = el.style.display === "block" ? "none" : "block";
+    }
+
+    // Mostrar todos al cargar
+    filtrarRegistros();
+  </script>
+</body>
+</html>
