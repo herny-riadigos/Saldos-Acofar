@@ -155,7 +155,7 @@ function guardarTabla() {
 /****************************************************
  * ☁️ GUARDAR EN FIREBASE
  ****************************************************/
-import { db, collection, addDoc } from "./config/firebase-config.js";
+import { db, collection, addDoc } from "../config/firebase-config.js";
 firebase.initializeApp(firebaseConfig);
 
 async function guardarEnFirebase(registro) {
