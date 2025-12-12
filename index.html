@@ -1,249 +1,210 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Saldos Acofar - Riadigos</title>
-
-  <style>
-    /* ======== ESTILOS GENERALES ======== */
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: #f7f9f8;
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* ======== CABECERA ======== */
-    header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 60px;
-      background: #ffffff;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 30px;
-      z-index: 10;
-    }
-
-    #fecha {
-      font-weight: 500;
-      color: #444;
-    }
-
-    #logo {
-      height: 40px;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-    }
-
-    #logo:hover {
-      transform: scale(1.05);
-    }
-
-    /* ======== CONTENEDOR PRINCIPAL ======== */
-    main {
-      display: flex;
-      width: 100%;
-      margin-top: 60px;
-      height: calc(100vh - 60px);
-    }
-
-    /* ======== BARRA LATERAL ======== */
-    .sidebar {
-      width: 200px;
-      background: #2e7d32;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      padding-top: 20px;
-    }
-
-    .sidebar button {
-      width: 100%;
-      background: transparent;
-      color: white;
-      border: none;
-      text-align: left;
-      padding: 12px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar button:hover {
-      background: #388e3c;
-      transform: translateX(10px);
-    }
-
-    /* ======== CONTENIDO CENTRAL ======== */
-    .contenido {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 30px;
-      overflow-y: auto;
-    }
-
-    h1 {
-      font-size: 28px;
-      color: #2e7d32;
-      margin-bottom: 30px;
-    }
-
-    /* ======== BOTONES CENTRALES ======== */
-    .boton-grande {
-      width: 80%;
-      max-width: 600px;
-      background: #ffffff;
-      color: #333;
-      border: 2px solid #4caf50;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 10px 0;
-      font-size: 18px;
-      font-weight: 500;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .boton-grande:hover {
-      background: #e8f5e9;
-      transform: scale(1.02);
-    }
-
-    /* ======== TABLA DESPLEGABLE ======== */
-    .tabla {
-      width: 80%;
-      max-width: 600px;
-      background: white;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      margin-bottom: 20px;
-      display: none;
-      overflow: hidden;
-      animation: aparecer 0.3s ease-out;
-    }
-
-    @keyframes aparecer {
-      from { opacity: 0; transform: translateY(-10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: center;
-    }
-
-    th {
-      background: #4caf50;
-      color: white;
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Saldos Acofar - Riadigos</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+    <!-- ======== CABECERA ======== -->
+    <header>
+        <div class="fecha" id="fecha"></div>
+        <button class="btn-riadigos" onclick="irPrincipal()">Riadigos*</button>
+    </header>
 
-  <!-- ======== CABECERA ======== -->
-  <header>
-    <div id="fecha"></div>
-    <img id="logo" src="https://i.ibb.co/4RNXXc9/riadigos-logo.png" alt="Riadigos" onclick="irPrincipal()">
-  </header>
+    <!-- ======== CONTENIDO PRINCIPAL ======== -->
+    <main>
+        <!-- BARRA LATERAL -->
+        <div class="sidebar">
+            <button onclick="abrirFarmacia('JBJ')">JBJ</button>
+            <button onclick="abrirFarmacia('ALEM')">ALEM</button>
+            <button onclick="abrirFarmacia('FARMACIA MESA')">FARMACIA MESA</button>
+            <button onclick="abrirFarmacia('GASCON')">GASCON</button>
+            <button onclick="abrirFarmacia('DIAGONAL')">DIAGONAL</button>
+            <button onclick="abrirFarmacia('MRL')">MRL</button>
+            <button onclick="abrirFarmacia('GRAMA')">GRAMA</button>
+            <button onclick="abrirFarmacia('ORTEGA')">ORTEGA</button>
+            <button onclick="abrirFarmacia('RIMATU')">RIMATU</button>
+            <button onclick="abrirFarmacia('RM')">RM</button>
+            <button onclick="abrirFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</button>
+            <button onclick="abrirFarmacia('SAN MARTIN')">SAN MARTIN</button>
+        </div>
 
-  <!-- ======== CONTENIDO PRINCIPAL ======== -->
-  <main>
-    <!-- BARRA LATERAL -->
-    <div class="sidebar">
-      <button onclick="abrirFarmacia('JBJ')">JBJ</button>
-      <button onclick="abrirFarmacia('ALEM')">ALEM</button>
-      <button onclick="abrirFarmacia('FARMACIA MESA')">FARMACIA MESA</button>
-      <button onclick="abrirFarmacia('GASCON')">GASCON</button>
-      <button onclick="abrirFarmacia('DIAGONAL')">DIAGONAL</button>
-      <button onclick="abrirFarmacia('MRL')">MRL</button>
-      <button onclick="abrirFarmacia('GRAMA')">GRAMA</button>
-      <button onclick="abrirFarmacia('ORTEGA')">ORTEGA</button>
-      <button onclick="abrirFarmacia('RIMATU')">RIMATU</button>
-      <button onclick="abrirFarmacia('RM')">RM</button>
-      <button onclick="abrirFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</button>
-      <button onclick="abrirFarmacia('SAN MARTIN')">SAN MARTIN</button>
-    </div>
+        <!-- CONTENIDO CENTRAL -->
+        <div class="contenido">
+            <h2 class="titulo-principal">Cierre semanal de tarjetas</h2>
 
-    <!-- CONTENIDO CENTRAL -->
-    <div class="contenido">
-      <h1>Saldos Acofar</h1>
+            <!-- 🔽 Selector de farmacia -->
+            <div class="selector-farmacia">
+                <button class="btn-seleccionar" onclick="toggleSelector()">Seleccionar Farmacia</button>
+                <div id="listaFarmacias" class="lista-farmacias">
+                    <ul>
+                        <li onclick="seleccionarFarmacia('JBJ')">JBJ</li>
+                        <li onclick="seleccionarFarmacia('ALEM')">ALEM</li>
+                        <li onclick="seleccionarFarmacia('FARMACIA MESA')">FARMACIA MESA</li>
+                        <li onclick="seleccionarFarmacia('GASCON')">GASCON</li>
+                        <li onclick="seleccionarFarmacia('DIAGONAL')">DIAGONAL</li>
+                        <li onclick="seleccionarFarmacia('MRL')">MRL</li>
+                        <li onclick="seleccionarFarmacia('GRAMA')">GRAMA</li>
+                        <li onclick="seleccionarFarmacia('ORTEGA')">ORTEGA</li>
+                        <li onclick="seleccionarFarmacia('RIMATU')">RIMATU</li>
+                        <li onclick="seleccionarFarmacia('RM')">RM</li>
+                        <li onclick="seleccionarFarmacia('GUEMES Y SHOPPING')">GUEMES Y SHOPPING</li>
+                        <li onclick="seleccionarFarmacia('SAN MARTIN')">SAN MARTIN</li>
+                    </ul>
+                </div>
 
-      <!-- 12 BOTONES PRINCIPALES -->
-      <div id="panelCentral">
-        <!-- Se crean dinámicamente desde JS -->
-      </div>
-    </div>
-  </main>
+                <p id="farmaciaSeleccionada" class="farmacia-seleccionada">Ninguna farmacia seleccionada</p>
+            </div>
 
-  <script>
-    // Mostrar fecha actual
-    const fecha = new Date();
-    const opciones = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-    document.getElementById("fecha").textContent = fecha.toLocaleDateString("es-AR", opciones);
+            <!-- 🧾 Tabla de carga -->
+            <div class="tabla-semanal">
+                <table id="tablaSemanal">
+                    <thead>
+                        <tr>
+                            <th>Día</th>
+                            <th>Clover</th>
+                            <th>Posnet</th>
+                            <th>Total Día</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Lunes</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Martes</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Miércoles</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Jueves</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Viernes</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Sábado</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr>
+                            <td>Domingo</td>
+                            <td contenteditable="true"></td>
+                            <td contenteditable="true"></td>
+                            <td>$0,00</td>
+                        </tr>
+                        <tr class="fila-total">
+                            <td><strong>Total Semana</strong></td>
+                            <td id="totalClover">$0,00</td>
+                            <td id="totalPosnet">$0,00</td>
+                            <td id="totalGeneral">$0,00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    // Ir a la página principal
-    function irPrincipal() {
-      window.location.href = "https://boot-riadigos.web.app"; // Cambiá por tu URL principal
-    }
+        <script>
+            // --- Selector de farmacia ---
+            function toggleSelector() {
+                const lista = document.getElementById("listaFarmacias");
+                lista.style.display = lista.style.display === "block" ? "none" : "block";
+            }
 
-    // Crear dinámicamente los 12 botones del centro
-    const farmacias = [
-      "JBJ", "ALEM", "FARMACIA MESA", "GASCON", "DIAGONAL", "MRL",
-      "GRAMA", "ORTEGA", "RIMATU", "RM", "GUEMES Y SHOPPING", "SAN MARTIN"
-    ];
+            function seleccionarFarmacia(nombre) {
+                document.getElementById("farmaciaSeleccionada").textContent =
+                    "Sucursal seleccionada: " + nombre;
+                document.getElementById("listaFarmacias").style.display = "none";
+            }
 
-    const panel = document.getElementById("panelCentral");
+            // --- Formato moneda y cálculos ---
+            const tabla = document.getElementById("tablaSemanal");
 
-    farmacias.forEach(nombre => {
-      const btn = document.createElement("div");
-      btn.className = "boton-grande";
-      btn.textContent = nombre;
-      btn.onclick = () => toggleTabla(nombre);
-      panel.appendChild(btn);
+            tabla.addEventListener("input", (e) => {
+                if (e.target.hasAttribute("contenteditable")) {
+                    const valor = e.target.innerText.replace(/[^\d,.-]/g, "").replace(",", ".");
+                    e.target.dataset.valor = parseFloat(valor) || 0;
+                    actualizarTotales();
+                }
+            });
 
-      const tablaDiv = document.createElement("div");
-      tablaDiv.className = "tabla";
-      tablaDiv.id = "tabla_" + nombre.replace(/\s/g, "_");
-      tablaDiv.innerHTML = `
-        <table>
-          <tr><th>Semana</th><th>Cierre</th><th>Saldo</th><th>Diferencia</th></tr>
-          <tr><td>Ejemplo</td><td>-</td><td>-</td><td>-</td></tr>
-        </table>`;
-      panel.appendChild(tablaDiv);
-    });
+            tabla.addEventListener("blur", (e) => {
+                if (e.target.hasAttribute("contenteditable")) {
+                    const valor = parseFloat(e.target.dataset.valor || 0);
+                    e.target.innerText = valor.toLocaleString("es-AR", {
+                        style: "currency",
+                        currency: "ARS"
+                    });
+                }
+            }, true);
 
-    function toggleTabla(nombre) {
-      const id = "tabla_" + nombre.replace(/\s/g, "_");
-      const tabla = document.getElementById(id);
-      const visible = tabla.style.display === "block";
-      document.querySelectorAll(".tabla").forEach(t => t.style.display = "none");
-      tabla.style.display = visible ? "none" : "block";
-    }
+            // --- Salto al presionar Enter ---
+            tabla.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") {
+                    e.preventDefault();
+                    const celdas = [...tabla.querySelectorAll("[contenteditable]")];
+                    const idx = celdas.indexOf(e.target);
+                    if (idx >= 0 && idx < celdas.length - 1) {
+                        celdas[idx + 1].focus();
+                    }
+                }
+            });
 
-    // Función placeholder para los botones de la barra lateral
-    function abrirFarmacia(nombre) {
-      alert("Abrir página de: " + nombre);
-    }
-  </script>
+            function actualizarTotales() {
+                const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
+                let totalClover = 0, totalPosnet = 0, totalGeneral = 0;
+
+                filas.forEach(fila => {
+                    const c1 = parseFloat(fila.children[1].dataset.valor || 0);
+                    const c2 = parseFloat(fila.children[2].dataset.valor || 0);
+                    const suma = c1 + c2;
+                    fila.children[3].innerText = suma.toLocaleString("es-AR", {
+                        style: "currency",
+                        currency: "ARS"
+                    });
+                    totalClover += c1;
+                    totalPosnet += c2;
+                    totalGeneral += suma;
+                });
+
+                document.getElementById("totalClover").innerText =
+                    totalClover.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+                document.getElementById("totalPosnet").innerText =
+                    totalPosnet.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+                document.getElementById("totalGeneral").innerText =
+                    totalGeneral.toLocaleString("es-AR", { style: "currency", currency: "ARS" });
+            }
+        </script>
+        <script>
+            // Mostrar fecha actual en formato largo
+            const fechaElem = document.getElementById("fecha");
+            const hoy = new Date();
+            const opciones = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+            fechaElem.textContent = hoy.toLocaleDateString("es-AR", opciones);
+        </script>
+
 
 </body>
+
 </html>
