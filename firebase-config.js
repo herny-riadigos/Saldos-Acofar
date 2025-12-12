@@ -6,7 +6,7 @@ import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.c
 
 // 🔧 Configuración del proyecto (reemplazá con tus datos reales)
 const firebaseConfig = {
-    apiKey: "AIzaSyA8ZmoitEfWCjlV21QXx7zun-UsqlpRr_8",
+    apiKey: "AIzaSyBTjGwoOUXjth9iyHoCqZwpZQyIqLhi6Wk",
     authDomain: "saldos-acofar.firebaseapp.com",
     projectId: "saldos-acofar",
     storageBucket: "saldos-acofar.firebasestorage.app",
