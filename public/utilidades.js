@@ -12,7 +12,6 @@ if (fechaElem) {
  * 🏠 BOTÓN RIADIGOS (ir a la página principal)
  ****************************************************/
 function irPrincipal() {
-  // Cambiar por la URL real del inicio cuando esté lista
   window.location.href = "index.html";
 }
 
@@ -34,7 +33,6 @@ function toggleSelector() {
 function seleccionarFarmacia(nombre) {
   document.getElementById("farmaciaSeleccionada").textContent = "Sucursal: " + nombre;
   document.getElementById("listaFarmacias").style.display = "none";
-  // Guardar la sucursal seleccionada para usarla al guardar
   localStorage.setItem("sucursalActual", nombre);
 }
 
@@ -51,15 +49,19 @@ if (tabla) {
     }
   });
 
-  tabla.addEventListener("blur", (e) => {
-    if (e.target.hasAttribute("contenteditable")) {
-      const valor = parseFloat(e.target.dataset.valor || 0);
-      e.target.innerText = valor.toLocaleString("es-AR", {
-        style: "currency",
-        currency: "ARS",
-      });
-    }
-  }, true);
+  tabla.addEventListener(
+    "blur",
+    (e) => {
+      if (e.target.hasAttribute("contenteditable")) {
+        const valor = parseFloat(e.target.dataset.valor || 0);
+        e.target.innerText = valor.toLocaleString("es-AR", {
+          style: "currency",
+          currency: "ARS",
+        });
+      }
+    },
+    true
+  );
 
   tabla.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
@@ -78,7 +80,9 @@ if (tabla) {
  ****************************************************/
 function actualizarTotales() {
   const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
-  let totalClover = 0, totalPosnet = 0, totalGeneral = 0;
+  let totalClover = 0,
+    totalPosnet = 0,
+    totalGeneral = 0;
 
   filas.forEach((fila) => {
     const c1 = parseFloat(fila.children[1].dataset.valor || 0);
@@ -108,9 +112,9 @@ function actualizarTotales() {
 }
 
 /****************************************************
- * 💾 GUARDAR SEMANA (estructura global en localStorage)
+ * 💾 GUARDAR TABLA EN LOCAL Y FIREBASE
  ****************************************************/
-function guardarTabla() {
+async function guardarTabla() {
   const sucursal = localStorage.getItem("sucursalActual");
   const semana = document.getElementById("semanaInput").value.trim();
   const resumen = document.getElementById("resumenInput").value.trim();
@@ -119,7 +123,14 @@ function guardarTabla() {
   if (!semana) return alert("Ingresá la semana.");
   if (!resumen) return alert("Ingresá el resumen.");
 
-  // Recolectar datos de la tabla
+  // Validar formato de fecha
+  const fechaValida = new Date(semana);
+  if (isNaN(fechaValida.getTime())) {
+    alert("La fecha de semana no es válida.");
+    return;
+  }
+
+  // Recolectar datos
   const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
   const datos = filas.map((fila) => ({
     dia: fila.children[0].innerText,
@@ -144,68 +155,18 @@ function guardarTabla() {
     fechaGuardado: new Date().toLocaleString("es-AR"),
   };
 
-  // Guardar en localStorage
-  const registros = JSON.parse(localStorage.getItem("cierresRiadigos") || "[]");
-  registros.push(registro);
-  localStorage.setItem("cierresRiadigos", JSON.stringify(registros));
-
-  alert("✅ Semana guardada correctamente para " + sucursal.toUpperCase());
-}
-
-/****************************************************
- * ☁️ GUARDAR EN FIREBASE
- ****************************************************/
-import { db, collection, addDoc } from "../config/firebase-config.js";
-firebase.initializeApp(firebaseConfig);
-
-async function guardarEnFirebase(registro) {
-  try {
-    await addDoc(collection(db, "cierres"), registro);
-    alert("✅ Semana guardada en la nube correctamente.");
-  } catch (e) {
-    console.error("❌ Error al guardar en Firebase:", e);
-    alert("Error al guardar en la nube. Ver consola.");
-  }
-}
-
-/****************************************************
- * 💾 MODIFICAR GUARDAR TABLA
- ****************************************************/
-async function guardarTabla() {
-  const sucursal = localStorage.getItem("sucursalActual");
-  const semana = document.getElementById("semanaInput").value.trim();
-  const resumen = document.getElementById("resumenInput").value.trim();
-
-  if (!sucursal) return alert("Seleccioná una sucursal antes de guardar.");
-  if (!semana) return alert("Ingresá la semana.");
-  if (!resumen) return alert("Ingresá el resumen.");
-
-  const filas = [...tabla.querySelectorAll("tbody tr:not(.fila-total)")];
-  const datos = filas.map(fila => ({
-    dia: fila.children[0].innerText,
-    clover: parseFloat(fila.children[1].dataset.valor || 0),
-    posnet: parseFloat(fila.children[2].dataset.valor || 0),
-    total: parseFloat(fila.children[3].innerText.replace(/[^\d.-]/g, "") || 0)
-  }));
-
-  const registro = {
-    sucursal,
-    semana,
-    resumen,
-    datos,
-    totales: {
-      clover: parseFloat(document.getElementById("totalClover").innerText.replace(/[^\d.-]/g, "")) || 0,
-      posnet: parseFloat(document.getElementById("totalPosnet").innerText.replace(/[^\d.-]/g, "")) || 0,
-      general: parseFloat(document.getElementById("totalGeneral").innerText.replace(/[^\d.-]/g, "")) || 0,
-    },
-    fechaGuardado: new Date().toLocaleString("es-AR")
-  };
-
   // Guardar localmente
   const registros = JSON.parse(localStorage.getItem("cierresRiadigos") || "[]");
   registros.push(registro);
   localStorage.setItem("cierresRiadigos", JSON.stringify(registros));
 
-  // Guardar también en la nube
-  await guardarEnFirebase(registro);
+  // Guardar en Firestore
+  try {
+    const db = firebase.firestore();
+    await db.collection("cierres").add(registro);
+    alert("✅ Semana guardada correctamente en la nube y localmente.");
+  } catch (err) {
+    console.error("❌ Error al guardar en Firestore:", err);
+    alert("Error al guardar en Firebase. Ver consola.");
+  }
 }

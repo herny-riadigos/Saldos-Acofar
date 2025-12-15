@@ -28,7 +28,7 @@
       <!-- 🧭 FILTROS -->
       <div class="filtros">
         <label>Sucursal:
-          <select id="filtroSucursal">
+          <select id="sucursalSelect">
             <option value="">Todas</option>
             <option>JBJ</option>
             <option>ALEM</option>
@@ -46,14 +46,14 @@
         </label>
 
         <label>Semana:
-          <input type="text" id="filtroSemana" placeholder="Ej: 08/12/2025">
+          <input type="date" id="semanaInput" />
         </label>
 
         <label>Resumen:
-          <input type="text" id="filtroResumen" placeholder="Ej: 2520">
+          <input type="text" id="resumenInput" placeholder="Ej: 2520">
         </label>
 
-        <button class="btn-buscar" onclick="filtrarRegistros()">🔍 Buscar</button>
+        <button id="btnBuscar" class="btn-buscar">🔍 Buscar</button>
       </div>
 
       <!-- 🧾 RESULTADOS -->
@@ -63,41 +63,85 @@
     </div>
   </main>
 
+  <!-- 🔥 Firebase COMPATIBLE SDK (v9.6.10) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+
+  <script>
+    // 🔧 Configuración Firebase (ya configurada en tu proyecto)
+    const firebaseConfig = {
+      apiKey: "AIzaSyBy1azVUd_Js7T8m4BMmVxu1gHRc4OsKw",
+      authDomain: "gestion-horarios-riadigos.firebaseapp.com",
+      projectId: "gestion-horarios-riadigos",
+      storageBucket: "gestion-horarios-riadigos.appspot.com",
+      messagingSenderId: "647794385698",
+      appId: "1:647794385698:web:f643aeea827de6947db7b7"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
   <script src="utilidades.js"></script>
+
   <script>
     /****************************************************
-     * 📅 Mostrar fecha actual
+     * 📅 CALCULAR RANGO SEMANAL (lunes a domingo)
      ****************************************************/
-    const fechaElem = document.getElementById("fecha");
-    const hoy = new Date();
-    const opciones = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-    fechaElem.textContent = hoy.toLocaleDateString("es-AR", opciones);
+    function obtenerRangoSemana(fechaSeleccionada) {
+      const fecha = new Date(fechaSeleccionada);
+      const diaSemana = fecha.getDay(); // 0=domingo, 1=lunes...
+      const lunes = new Date(fecha);
+      lunes.setDate(fecha.getDate() - ((diaSemana + 6) % 7));
+      const domingo = new Date(lunes);
+      domingo.setDate(lunes.getDate() + 6);
+      return { lunes, domingo };
+    }
 
     /****************************************************
-     * 📂 Cargar y mostrar registros guardados
+     * 🔍 FILTRAR REGISTROS LOCALSTORAGE
      ****************************************************/
-    const resultados = document.getElementById("resultados");
-
     function filtrarRegistros() {
       const registros = JSON.parse(localStorage.getItem("cierresRiadigos") || "[]");
-      const suc = document.getElementById("filtroSucursal").value.trim();
-      const sem = document.getElementById("filtroSemana").value.trim();
-      const res = document.getElementById("filtroResumen").value.trim();
+      const sucursal = document.getElementById("sucursalSelect").value.trim();
+      const resumen = document.getElementById("resumenInput").value.trim();
+      const fecha = document.getElementById("semanaInput").value;
 
-      const filtrados = registros.filter(r =>
-        (!suc || r.sucursal === suc) &&
-        (!sem || r.semana.includes(sem)) &&
-        (!res || r.resumen.includes(res))
-      );
+      let filtrados = registros;
+
+      // Filtro por sucursal
+      if (sucursal) filtrados = filtrados.filter(r => r.sucursal === sucursal);
+
+      // Filtro por resumen
+      if (resumen) filtrados = filtrados.filter(r => r.resumen.includes(resumen));
+
+      // Filtro por semana (rango lunes-domingo)
+      if (fecha) {
+        const { lunes, domingo } = obtenerRangoSemana(fecha);
+        const inicio = lunes.getTime();
+        const fin = domingo.getTime();
+
+        filtrados = filtrados.filter(r => {
+          const [dia, mes, año] = r.semana.split(/[\/\-]/).map(Number);
+          const fechaRegistro = new Date(año, mes - 1, dia).getTime();
+          return fechaRegistro >= inicio && fechaRegistro <= fin;
+        });
+
+        console.log(`Buscando registros del ${lunes.toLocaleDateString("es-AR")} al ${domingo.toLocaleDateString("es-AR")}`);
+      }
 
       mostrarResultados(filtrados);
     }
 
+    /****************************************************
+     * 🧾 MOSTRAR RESULTADOS
+     ****************************************************/
     function mostrarResultados(lista) {
-      resultados.innerHTML = "";
+      const contenedor = document.getElementById("resultados");
+      contenedor.innerHTML = "";
 
       if (lista.length === 0) {
-        resultados.innerHTML = `<p class="placeholder">❌ No se encontraron registros.</p>`;
+        contenedor.innerHTML = `<p class="placeholder">❌ No se encontraron registros.</p>`;
         return;
       }
 
@@ -111,27 +155,27 @@
           </div>
           <div class="detalle-card" id="detalle_${i}">
             <table>
-              <thead><tr><th>Día</th><th>Clover</th><th>Posnet</th><th>Total</th></tr></thead>
+              <thead>
+                <tr><th>Día</th><th>Clover</th><th>Posnet</th><th>Total</th></tr>
+              </thead>
               <tbody>
                 ${r.datos.map(f => `
                   <tr>
                     <td>${f.dia}</td>
-                    <td>${f.clover.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
-                    <td>${f.posnet.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
-                    <td>${f.total.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
-                  </tr>
-                `).join("")}
+                    <td>${f.clover.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
+                    <td>${f.posnet.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
+                    <td>${f.total.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
+                  </tr>`).join("")}
                 <tr class="fila-total">
                   <td><strong>Total</strong></td>
-                  <td>${r.totales.clover.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
-                  <td>${r.totales.posnet.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
-                  <td>${r.totales.general.toLocaleString("es-AR",{style:"currency",currency:"ARS"})}</td>
+                  <td>${r.totales.clover.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
+                  <td>${r.totales.posnet.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
+                  <td>${r.totales.general.toLocaleString("es-AR", { style: "currency", currency: "ARS" })}</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        `;
-        resultados.appendChild(div);
+          </div>`;
+        contenedor.appendChild(div);
       });
     }
 
@@ -139,6 +183,9 @@
       const el = document.getElementById("detalle_" + i);
       el.style.display = el.style.display === "block" ? "none" : "block";
     }
+
+    // Escuchar clic del botón
+    document.getElementById("btnBuscar").addEventListener("click", filtrarRegistros);
 
     // Mostrar todos al cargar
     filtrarRegistros();
